@@ -7,7 +7,9 @@
 ***Usage***
  
 ***Resources:***
+
    kwildb github: https://github.com/kwilteam/kwil_db_api
+   
    xorm docs: https://xorm.io/docs/
    
 ***Development contract:***
