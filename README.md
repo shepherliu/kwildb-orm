@@ -3,6 +3,7 @@
 
 ***How to run***
 
+    npm install kwildb-orm  
 
 ***Usage***
  
