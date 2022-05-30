@@ -1,8 +1,8 @@
 {
   "name": "kwildb-orm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "./src/index.ts",
+  "main": "src/index.ts",
   "homepage": "https://github.com/shepherliu/kwildb-orm",
   "scripts": {
     "build": "webpack --mode development",
@@ -12,7 +12,6 @@
   "author": "",
   "license": "GNU3.0",
   "dependencies": {
-    "@types/node": "^17.0.34",
     "assert": "^2.0.0",
     "babel-core": "^6.26.3",
     "browserify-zlib": "^0.2.0",
@@ -41,7 +40,6 @@
     "kwildb": "^1.2.28"
   },
   "devDependencies": {
-    "babel-preset-env": "^1.7.0",
     "webpack-cli": "^4.9.2"
   }
 }
