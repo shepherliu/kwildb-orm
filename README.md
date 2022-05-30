@@ -49,7 +49,7 @@
 
   surported orm functions:
   
-  ```typescript
+```typescript
         
 	table(tableName:string){}; //select table name
 	select(select:string[]){}; //select columns
@@ -80,7 +80,10 @@
 	async close(){}; //close sql transaction
 ```
 
+   examples:
+
 ```typescript
+
    let res;
    
    const session = engine.NewSession();
