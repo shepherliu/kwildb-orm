@@ -44,6 +44,61 @@
     res = await engine.dropTables('test_cloud3');
     console.log(res);
 ```
+
+**3. create a new session**
+```typescript
+   let res;
+   
+   const session = engine.NewSession();
+   
+   //insert data
+   res = session.table('test_cloud3').insert([
+			  {
+				   id:2,
+				   name: 'ddd',
+			  },
+			  {
+				   id:3,
+				   name: 'mmm',
+			  },
+		 ]);
+   console.log(res);
+   //update data
+   res = await session.table('test_cloud3').where('name', 'like', '%cc%').update({name: 'vvv'});
+   console.log(res);
+   //delete data
+   res = await session.table('test_cloud3').where('id', '=', 2).or('id', '=', 3).delete();
+   console.log(res);
+   //get data with id()
+   res = await session.table('test_cloud3').id(3).get();
+   console.log(res);
+   //get data with paramter
+   res = await session.table('test_cloud3').get({id:1});
+   console.log(res);
+   //exist data
+   res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).exist();
+   console.log(res);
+   //get data
+   res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).get();
+   console.log(res);
+   //get first data
+   res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).first();
+   console.log(res);
+   //find datas
+   res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).find();
+   console.log(res);
+   
+   //data count
+   console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').count('id'));
+   //data max
+		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').max('id'));
+   //data min
+		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').min('id'));
+   //data avg
+		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').avg('id'));
+   //data sum
+		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').sum('id'));
+```
 ***Resources:***
 
    kwildb github: https://github.com/kwilteam/kwil_db_api
