@@ -56,28 +56,59 @@ export class KwilDBEngine {
 		return this.status;
 	}
 
+	//start a new session
 	NewSession() {
 		return new KwilDBSession(this.conn);
 	}
 
+	//raw sql query Statement
 	async query(query:string, sync:boolean = false){
 		return await this.conn.query(query, sync);
 	}
 
+	//raw sql query preparedStatement
 	async preparedStatement(query:string, inputs:(string|number)[], sync:boolean = false){
 		return await this.conn.preparedStatement(query, inputs, sync);
 	}
 
+	//get moat funding value
 	async getMoatFunding(){
 		return await this.conn.getMoatFunding();
 	}
 
+	//get moat debit value
 	async getMoatDebit(){
 		return await this.conn.getMoatDebit();
 	}
 
+	//create a new moat
 	async createMoat(registry = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = '', signature:string = '', address:string = ''){
-		return await await KwilDB.createMoat(registry, moat, signature, address);
+		return await KwilDB.createMoat(registry, moat, signature, address);
+	}
+
+	//decrypt key
+	async decryptKey(signature:string, address:string, cipherText:string){
+		return await KwilDB.decryptKey(signature, address, cipherText);
+	}
+
+	//get funding pools by moat
+	async getPoolsByMoat(registry = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = ''){
+		return await KwilDB.getPoolsByMoat(registry, moat);
+	}
+
+	//get funding pools
+	async getPool(pool:string, chain:string = 'polygon', token:string = 'KRED'){
+		return await KwilDB.pools.getPool(pool, chain, token);
+	}
+
+	//create funding pool
+	async createFundingPool(name:string, addr:string, validator:string, chain:string = 'polygon', token:string = 'KRED', moat:string){
+		return await KwilDB.pools.createFundingPool(name, addr, validator, chain, token, moat);
+	}
+
+	//fund a pool
+	async fundPool(name:string, addr:string , chain:string = 'polygon', token:string = 'KRED', amount:number = 1) {
+		return await KwilDB.pools.fundPool(name, addr, chain, token, amount);
 	}
 
 	//todo in the future
