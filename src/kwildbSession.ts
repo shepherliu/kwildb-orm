@@ -161,6 +161,7 @@ export class KwilDBSession {
 		return this;
 	}
 
+	//inser datas
 	async insert(data:dataObject[], sync:boolean = true) {
 		const keys = Object.keys(data[0]);
 
@@ -194,10 +195,12 @@ export class KwilDBSession {
     	return res.rowCount;	
 	}
 
+	//insert one data
 	async insertOne(data:dataObject, sync:boolean = true) {
 		return await this.insert([data]);
 	}
 
+	//update data
 	async update(data:dataObject, sync:boolean = true){
 		let sql = `update ${this.tableName} set `;
 		let subsql = [];
@@ -219,6 +222,7 @@ export class KwilDBSession {
     	return res.rowCount;		
 	}	
 
+	//delete data
 	async delete(data:dataObject = {}, sync:boolean = true) {
 		for(const k in data){
 			this.where(k, '=', data[k]);
@@ -234,6 +238,7 @@ export class KwilDBSession {
     	return res.rowCount;
 	}
 
+	//exist or not
 	async exist(data:dataObject = {}, sync:boolean = false){
 		const res = await this.limit(1).find(data, sync);
 		if(res.length === 0){
@@ -243,6 +248,7 @@ export class KwilDBSession {
 		return true;
 	}
 
+	//get one data
 	async get(data:dataObject = {}, sync:boolean = false){
 		const res = await this.limit(1).find(data, sync);
 		if(res.length === 0){
@@ -252,6 +258,7 @@ export class KwilDBSession {
 		return res[0];
 	}	
 
+	//get first data
 	async first(data:dataObject = {}, sync:boolean = false) {
 		const res = await this.limit(1).find(data, sync);
 		if(res.length === 0){
@@ -261,6 +268,7 @@ export class KwilDBSession {
 		return res[0];
 	}	
 
+	//find
 	async find(data:dataObject = {}, sync:boolean = false) {
 		for(const k in data){
 			this.where(k, '=', data[k]);
@@ -276,6 +284,7 @@ export class KwilDBSession {
     	return res.rows;
 	}	
 
+	//count
 	async count(colName:string = '*', sync:boolean = false) {
 		const sql = `select count(${colName}) from ${this.tableName} ${this.toWhere} ${this.toGroug} ${this.toOrder} ${this.toLimit}`;
 		const res = await this.conn.preparedStatement(sql, this.toValues, sync);
@@ -293,6 +302,7 @@ export class KwilDBSession {
 		return rows;
 	}	
 
+	//max
 	async max(colName:string, sync:boolean = false) {
 		const sql = `select max(${colName}) from ${this.tableName} ${this.toWhere} ${this.toGroug} ${this.toOrder} ${this.toLimit}`;
 		const res = await this.conn.preparedStatement(sql, this.toValues, sync);
@@ -310,6 +320,7 @@ export class KwilDBSession {
 		return rows;
 	}
 
+	//min
 	async min(colName:string, sync:boolean = false) {
 		const sql = `select min(${colName}) from ${this.tableName} ${this.toWhere} ${this.toGroug} ${this.toOrder} ${this.toLimit}`;
 		const res = await this.conn.preparedStatement(sql, this.toValues, sync);
@@ -327,6 +338,7 @@ export class KwilDBSession {
 		return rows;
 	}
 
+	//sum
 	async sum(colName:string, sync:boolean = false){
 		const sql = `select sum(${colName}) from ${this.tableName} ${this.toWhere} ${this.toGroug} ${this.toOrder} ${this.toLimit}`;
 		const res = await this.conn.preparedStatement(sql, this.toValues, sync);
@@ -344,6 +356,7 @@ export class KwilDBSession {
 		return rows;
 	}
 
+	//avg
 	async avg(colName:string, sync:boolean = false){
 		const sql = `select avg(${colName}) from ${this.tableName} ${this.toWhere} ${this.toGroug} ${this.toOrder} ${this.toLimit}`;
 		const res = await this.conn.preparedStatement(sql, this.toValues, sync);
@@ -360,6 +373,16 @@ export class KwilDBSession {
 		
 		return rows;
 	}
+
+	//raw sql Statement
+	async query(query:string, sync:boolean = false){
+		return await this.conn.query(query, sync);
+	}
+
+	//raw sql preparedStatement
+	async preparedStatement(query:string, inputs:(string|number)[], sync:boolean = false){
+		return await this.conn.preparedStatement(query, inputs, sync);
+	}	
 
 	private clear(){
 		this.tableName = '';
@@ -381,8 +404,8 @@ export class KwilDBSession {
 		return this;
 	}
 
-	//sql query for session
-	async query(query:string){
+	//add a sql query to queue for session
+	async queue(query:string){
 		this.session.query(query);
 	}
 
