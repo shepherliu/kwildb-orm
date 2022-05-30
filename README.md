@@ -9,6 +9,8 @@
 
 **1. create a new kwildb engine**
 
+```typescript
+
     import NewEngine from 'kwildb-orm'
     
     const privateKey = JSON.parse(fs.readFileSync('./privateKey.json').toString());
@@ -23,9 +25,9 @@
        //get fundding
        console.log(await engine.getMoatFunding());
        //get debit
-		     console.log(await engine.getMoatDebit());
+       console.log(await engine.getMoatDebit());
     }
- 
+``` 
 ***Resources:***
 
    kwildb github: https://github.com/kwilteam/kwil_db_api
