@@ -143,6 +143,8 @@
    kwildb github: https://github.com/kwilteam/kwil_db_api
    
    xorm docs: https://xorm.io/docs/
+
+   demo video: https://www.youtube.com/watch?v=dPkGK1-qiUc
    
 ***Development contract:***
   
