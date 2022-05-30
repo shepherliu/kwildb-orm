@@ -53,15 +53,15 @@
    
    //insert data
    res = session.table('test_cloud3').insert([
-			  {
-				   id:2,
-				   name: 'ddd',
-			  },
-			  {
-				   id:3,
-				   name: 'mmm',
-			  },
-		 ]);
+	{
+		id:2,
+		name: 'ddd',
+	},
+	{
+		id:3,
+		name: 'mmm',
+	},
+   ]);
    console.log(res);
    //update data
    res = await session.table('test_cloud3').where('name', 'like', '%cc%').update({name: 'vvv'});
@@ -91,13 +91,13 @@
    //data count
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').count('id'));
    //data max
-		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').max('id'));
+   console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').max('id'));
    //data min
-		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').min('id'));
+   console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').min('id'));
    //data avg
-		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').avg('id'));
+   console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').avg('id'));
    //data sum
-		 console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').sum('id'));
+   console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').sum('id'));
 ```
 ***Resources:***
 
