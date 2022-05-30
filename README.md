@@ -32,7 +32,7 @@
 ```typescript
     let res;
     //create a new table, use query
-    res = await engine.query('create table test_cloud3(id int not null primary key, name varchar(256), timestamp int)', [], true);
+    res = await engine.query('create table test_cloud3(id int not null primary key, name varchar(256), timestamp int)', true);
     console.log(res);
     //insert data, use preparedStatement to prevent sql inject
     res = await engine.preparedStatement('insert into test_cloud3 (name) values ($1),($2)', ["ccc","ddd"], true);
