@@ -6,6 +6,25 @@
     npm install kwildb-orm  
 
 ***Usage***
+
+**1. create a new kwildb engine**
+
+    import NewEngine from 'kwildb-orm'
+    
+    const privateKey = JSON.parse(fs.readFileSync('./privateKey.json').toString());
+    const host = 'test-db.kwil.xyz';
+    const protocol = 'https';
+    const moat = 'test_cloud';
+    const secret = '7smx9dFXuLrbI8]ju+~:Jly#aMN,xis/';
+    
+    const engine = NewEngine(host, protocol, moat, privateKey, secret);
+    
+    if(engine != null){
+       //get fundding
+       console.log(await engine.getMoatFunding());
+       //get debit
+		     console.log(await engine.getMoatDebit());
+    }
  
 ***Resources:***
 
