@@ -50,7 +50,8 @@
   surported orm functions:
   
   ```typescript
-        table(tableName:string); //select table name
+        
+	table(tableName:string); //select table name
 	select(select:string[]); //select columns
 	limit(limit:number); //limit condition
 	groupBy(colName:string); //group by column
