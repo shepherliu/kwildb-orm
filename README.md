@@ -46,6 +46,39 @@
 ```
 
 **3. create a new session**
+
+  surported orm functions:
+  
+  ```typescript
+  	table(tableName:string); //select table name
+	select(select:string[]); //select columns
+	limit(limit:number); //limit condition
+	groupBy(colName:string); //group by column
+	orderBy(colName:string, order:orderType); //order by asc,desc
+	id(pk:number | dataObject); //id condition, number or (k,v) maps
+	where(colName:string, operator:operatorType, value:any); //where condition
+	and(colName:string, operator:operatorType, value:any); //and condition
+	or(colName:string, operator:operatorType, value:any); //or condition
+	async insert(data:dataObject[], sync:boolean = true); //insert datas
+	async insertOne(data:dataObject, sync:boolean = true); //insert one data
+	async update(data:dataObject, sync:boolean = true); //update datas
+	async delete(data:dataObject = {}, sync:boolean = true); //detele datas
+	async exist(data:dataObject = {}, sync:boolean = false); //if data exist or not
+	async get(data:dataObject = {}, sync:boolean = false); //get one data
+	async first(data:dataObject = {}, sync:boolean = false); //first data
+	async find(data:dataObject = {}, sync:boolean = false); //find datas
+	async count(colName:string = '*', sync:boolean = false); //data count
+	async max(colName:string, sync:boolean = false); //data max
+	async min(colName:string, sync:boolean = false); //data min
+	async avg(colName:string, sync:boolean = false); //data avg
+	async sum(colName:string, sync:boolean = false); //data sum
+	async begin(); //begin sql transaction
+	async query(query:string); //push sql to transaction queues, not suport preparedStatement now
+	async commit(); //commit sql transaction
+	async rollback(); //rollback sql transaction, todo in the future
+	async close(); //close sql transaction
+```
+
 ```typescript
    let res;
    
