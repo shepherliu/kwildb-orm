@@ -37,7 +37,7 @@
 
 ```typescript
 
-   use(schema:string); //use a schema
+   use(schema:string = 'public'); //use a schema
    NewSession(); //start a new session
    createSchema(schema:string); //create a schema
    dropSchema(schema:string); //drop a schema
@@ -116,7 +116,7 @@
 ```typescript
         
 	table(tableName:string); //select table name
-	select(select:string[]); //select columns
+	select(select:string[] = []); //select columns
 	limit(limit:number); //limit condition
 	groupBy(colName:string); //group by column
 	orderBy(colName:string, order:orderType = 'asc'); //order by asc,desc

@@ -31,7 +31,7 @@ export class KwilDBSession {
 	}
 
 	//select a schema
-	use(schema:string){
+	use(schema:string = 'public'){
 		if(schema != ''){
 			this.schema = schema;
 		}else{
@@ -49,7 +49,7 @@ export class KwilDBSession {
 	}
 
 	//select columns
-	select(select:string[]){
+	select(select:string[] = []){
 		if(select.length === 0){
 			this.toSelect  = '*';
 		}else{

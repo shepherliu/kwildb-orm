@@ -66,7 +66,7 @@ export class KwilDBEngine {
 	}
 
 	//select a schema
-	use(schema:string){
+	use(schema:string = 'public'){
 		if(schema != ''){
 			this.schema = schema;
 		}else{
