@@ -128,7 +128,7 @@
 	insertOne(data:dataObject, sync:boolean = true); //insert one data
 	update(data:dataObject, sync:boolean = true); //update datas
 	delete(data:dataObject = {}, sync:boolean = true); //detele datas
-   truncate(sync:boolean = true); //truncate datas
+        truncate(sync:boolean = true); //truncate datas
 	exist(data:dataObject = {}, sync:boolean = false); //if data exist or not
 	get(data:dataObject = {}, sync:boolean = false); //get one data
 	first(data:dataObject = {}, sync:boolean = false); //first data
