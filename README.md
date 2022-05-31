@@ -138,8 +138,8 @@
 	min(colName:string, sync:boolean = false); //data min
 	avg(colName:string, sync:boolean = false); //data avg
 	sum(colName:string, sync:boolean = false); //data sum
-   query(query:string, sync:boolean = false); //raw sql Statement
-   preparedStatement(query:string, inputs:(string|number)[], sync:boolean = false); //raw sql preparedStatement
+        query(query:string, sync:boolean = false); //raw sql Statement
+        preparedStatement(query:string, inputs:(string|number)[], sync:boolean = false); //raw sql preparedStatement
 	begin(); //begin sql transaction
 	queue(query:string); //push sql to transaction queues, not suport preparedStatement now
 	commit(); //commit sql transaction
