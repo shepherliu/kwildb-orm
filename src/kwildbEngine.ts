@@ -2,6 +2,8 @@ import KwilDB from 'kwildb';
 
 import { kwilDBHost, kwilDBProtocol} from './constant'
 
+import { dataObject } from './models'
+
 import { KwilDBSession } from './kwildbSession'
 
 export const NewEngine = (host = kwilDBHost, protocol = kwilDBProtocol, moat:string = '', privateKey:string = '', secret:string = '') => {
@@ -22,6 +24,7 @@ export class KwilDBEngine {
 	private secret:string;
 	private status = false;
 	private conn:any;
+	private schema:string;
 
 	constructor(host = kwilDBHost, protocol = kwilDBProtocol, moat:string = '', privateKey:string = '', secret:string = '') {
 		this.host = host;
@@ -29,6 +32,7 @@ export class KwilDBEngine {
 		this.moat = moat;
 		this.privateKey = privateKey;
 		this.secret = secret;
+		this.schema = 'public';
 	}
 
 	connect() {
@@ -58,7 +62,18 @@ export class KwilDBEngine {
 
 	//start a new session
 	NewSession() {
-		return new KwilDBSession(this.conn);
+		return new KwilDBSession(this.conn, this.schema);
+	}
+
+	//select a schema
+	use(schema:string){
+		if(schema != ''){
+			this.schema = schema.replaceAll(' ','');
+		}else{
+			this.schema = 'public';
+		}
+
+		return this;
 	}
 
 	//raw sql query Statement
@@ -121,47 +136,111 @@ export class KwilDBEngine {
 		return await this.conn.storeJPEG(filename, data, sync);
 	}
 
-	//todo in the future
-	async showTables(){
-	    const sql = `show tables`;
-	    const res = await this.preparedStatement(sql, [], true);
+	//create schema
+	async createSchema(schema:string){
+		const sql = `create schema if not exists ${schema.replaceAll(' ','')}`;
+		const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
 	    }
 
-	    return res;		
+	    return true;				
 	}
 
-	//todo in the future
-	async descTables(tableName:string){
-	    const sql = `desc table ${tableName}`;
-	    const res = await this.preparedStatement(sql, [], true);
+	//drop schema
+	async dropSchema(schema:string){
+		const sql = `drop schema if exists ${schema.replaceAll(' ','')}`;
+		const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
 	    }
 
-	    return res;		
+	    return true;		
 	}
 
-	//todo in the future
-	async isTableExist(tableName:string){
-	    const sql = `desc table ${tableName}`;
-	    const res = await this.preparedStatement(sql, [], true);
+	//show schema
+	async showSchemas(){
+		const sql = `select schema_name from information_schema.schemata`;
+
+		const res = await this.conn.preparedStatement(sql, [], false);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
 	    }
 
-	    return true;	
-	}	
+	    const schemas = [];
+	    for(let i = 0; i < res.rows.length; i++){
+	    	schemas.push(res.rows[i].schema_name);
+	    }
 
-	//todo in the future
-	async dropTables(tableName:string){
-	    const sql = `truncate ${tableName}`;
-	    const res = await this.preparedStatement(sql, [], true);
+	    return schemas;		
+	}
+
+	//create table
+	async createTable(tableName:string, columns:dataObject){
+		let sql = `create table if not exists ${this.schema}.${tableName.replaceAll(' ','')}`;
+
+		const subsql = [];
+
+		for(const k in columns){
+			subsql.push(`${k} ${columns[k]}`);
+		}
+
+		sql += `(${subsql.join(',')})`;
+
+		const res = await this.conn.preparedStatement(sql, [], true);
+	    if (typeof res === 'string') {
+	      throw new Error(res);
+	    }
+
+	    return true;			
+	}
+
+	//drop table
+	async dropTable(tableName:string){
+	    const sql = `drop table if exists ${this.schema}.${tableName.replaceAll(' ','')}`;
+	    const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
 	    }
 
 	    return true;
-	}	
+	}		
+
+	//todo in the future
+	async showTables(){
+	    const sql = `select table_name from information_schema.tables where table_schema = $1`;
+	    const res = await this.conn.preparedStatement(sql, [this.schema], false);
+	    if (typeof res === 'string') {
+	      throw new Error(res);
+	    }
+
+	    const tables = [];
+	    for(let i = 0; i < res.rows.length; i++){
+	    	tables.push(res.rows[i].table_name);
+	    }
+
+	    return tables;	
+	}
+
+	//todo in the future
+	async descTable(tableName:string){
+	    const sql = `select * from information_schema.columns where table_schema = $1 and table_name = $2`;
+	    const res = await this.conn.preparedStatement(sql, [this.schema, tableName], false);
+	    if (typeof res === 'string') {
+	      throw new Error(res);
+	    }
+
+	    return res.rows;		
+	}
+
+	//todo in the future
+	async isTableExist(tableName:string){
+	    const sql = `select table_name from information_schema.tables where table_schema = $1 and table_name = $2`;
+	    const res = await this.conn.preparedStatement(sql, [this.schema, tableName], false);
+	    if (typeof res === 'string') {
+	      throw new Error(res);
+	    }
+
+	    return res.rows.length > 0;	
+	}			
 }

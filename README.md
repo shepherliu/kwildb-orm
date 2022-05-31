@@ -9,6 +9,8 @@
 
 **1. create a new kwildb engine**
 
+   basic usage:
+
 ```typescript
 
     import NewEngine from 'kwildb-orm'
@@ -26,28 +28,90 @@
        console.log(await engine.getMoatFunding());
        //get debit
        console.log(await engine.getMoatDebit());
+       //use a schema, default using 'public' schema
+       engine.use('my_schema');       
     }
 ``` 
-**2. basic engine usage**
+
+   supported functions:
+
 ```typescript
-    let res;
-    //create a new table, use query
-    res = await engine.query('create table test_cloud3(id int not null primary key, name varchar(256), timestamp int)', true);
-    console.log(res);
-    //insert data, use preparedStatement to prevent sql inject
-    res = await engine.preparedStatement('insert into test_cloud3 (name) values ($1),($2)', ["ccc","ddd"], true);
-    console.log(res);
-    //select data
-    res = await engine.preparedStatement('select * from test_cloud', [], false);
-    console.log(res);
-    //delete table
-    res = await engine.dropTables('test_cloud3');
-    console.log(res);
-```
 
-**3. create a new session**
+   use(schema:string); //use a schema
+   NewSession(); //start a new session
+   createSchema(schema:string); //create a schema
+   dropSchema(schema:string); //drop a schema
+   showSchemas(); //show schemas
+   createTable(tableName:string, columns:dataObject); //create a table
+   dropTable(tableName:string); //drop a table
+   showTables(); //show tables
+   descTable(tableName:string); //desc a table
+   isTableExist(tableName:string); //if table exists or not
+   query(query:string, sync:boolean = false); //raw sql query Statement
+   preparedStatement(query:string, inputs:(string|number)[], sync:boolean = false); //raw sql query preparedStatement
 
-  surported orm functions:
+
+``` 
+
+   some examples:
+
+```typescript
+
+      //test use a schema
+      engine.use('my_schema');
+
+      //test create schema
+      console.log(await engine.createSchema('my_schema'));
+      
+      //test show schemas
+      console.log(await engine.showSchemas());
+
+      //test create table
+      console.log(await engine.createTable('test_cloud', {
+         id: 'int not null primary key',
+         name: 'varchar(256) not null default(\'\')',
+         timestamp: 'int not null',
+      }));
+
+      //test show tables
+      console.log(await engine.showTables());
+
+      //test table exists
+      console.log(await engine.isTableExist('test_cloud'));    
+
+      //test desc table
+      console.log(await engine.descTable('test_cloud'));
+
+      //test drop table
+      console.log(await engine.dropTable('test_cloud'));     
+      
+      //test drop schema
+      console.log(await engine.dropSchema('my_schema'));
+
+      //test basic sql Statement
+      console.log(await engine.query('create table if not exists test_cloud3(id int not null primary key, name varchar(256), timestamp int)', true));
+
+      //test basic sql preparedStatement
+      console.log(await engine.preparedStatement('insert into test_cloud3 (name) values ($1),($2)', ["ccc","ddd"], true));
+      console.log(await engine.preparedStatement('select * from test_cloud', [], false));      
+
+```    
+
+**2. create a new session**
+
+   basic usage:
+
+```typescript
+
+   //start a new session from the engine
+   const session = engine.NewSession();
+
+   //use a schema, default use the same schema as the engine set.
+   session.use('public');
+
+```  
+
+   surported orm functions:
   
 ```typescript
         
@@ -64,6 +128,7 @@
 	insertOne(data:dataObject, sync:boolean = true); //insert one data
 	update(data:dataObject, sync:boolean = true); //update datas
 	delete(data:dataObject = {}, sync:boolean = true); //detele datas
+   truncate(sync:boolean = true); //truncate datas
 	exist(data:dataObject = {}, sync:boolean = false); //if data exist or not
 	get(data:dataObject = {}, sync:boolean = false); //get one data
 	first(data:dataObject = {}, sync:boolean = false); //first data
@@ -82,14 +147,18 @@
 	close(); //close sql transaction
 ```
 
-   examples:
+   some examples:
 
 ```typescript
 
    let res;
    
-   const session = engine.NewSession();
+   const session = engine.NewSession().use('public');
    
+   //truncate data
+   res = await session.table('test_cloud3').truncate();
+   console.log(res);
+
    //insert data
    res = session.table('test_cloud3').insert([
 	{
@@ -102,39 +171,51 @@
 	},
    ]);
    console.log(res);
+
    //update data
    res = await session.table('test_cloud3').where('name', 'like', '%cc%').update({name: 'vvv'});
    console.log(res);
+
    //delete data
    res = await session.table('test_cloud3').where('id', '=', 2).or('id', '=', 3).delete();
    console.log(res);
+
    //get data with id()
    res = await session.table('test_cloud3').id(3).get();
    console.log(res);
+
    //get data with paramter
    res = await session.table('test_cloud3').get({id:1});
    console.log(res);
+
    //exist data
    res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).exist();
    console.log(res);
+
    //get data
    res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).get();
    console.log(res);
+
    //get first data
    res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).first();
    console.log(res);
+
    //find datas
    res = await session.table('test_cloud3').select(['id','name']).limit(3).orderBy('id', 'asc').groupBy('id').where('id', '>=', 1).find();
    console.log(res);
    
    //data count
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').count('id'));
+
    //data max
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').max('id'));
+
    //data min
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').min('id'));
+
    //data avg
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').avg('id'));
+   
    //data sum
    console.log(await session.table('test_cloud3').where('id', '>', 1).groupBy('name').sum('id'));
 ```

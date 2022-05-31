@@ -4,6 +4,7 @@ export class KwilDBSession {
 	private conn:any;
 	private session:any;
 
+	private schema:string;
 	private tableName:string;
 	private toSelect: string;
 	private toWhere:string;
@@ -14,9 +15,10 @@ export class KwilDBSession {
 	private preparedCount: number;
 	
 
-	constructor(conn:any){
+	constructor(conn:any, schema:string = 'public'){
 		this.conn = conn;
 		this.session = null;
+		this.schema = 'public';
 		this.tableName = '';
 		this.toSelect = '*';
 		this.toWhere = '';
@@ -25,14 +27,28 @@ export class KwilDBSession {
 		this.toGroug = '';
 		this.toValues = [];
 		this.preparedCount = 1;
+		this.use(schema);
 	}
 
-	table(tableName:string){
-		this.clear();
-		this.tableName = tableName;
+	//select a schema
+	use(schema:string){
+		if(schema != ''){
+			this.schema = schema.replaceAll(' ','');
+		}else{
+			this.schema = 'public';
+		}
+
 		return this;
 	}
 
+	//select a table
+	table(tableName:string){
+		this.clear();
+		this.tableName = `${this.schema}.${tableName.replaceAll(' ','')}`;
+		return this;
+	}
+
+	//select columns
 	select(select:string[]){
 		if(select.length === 0){
 			this.toSelect  = '*';
@@ -42,6 +58,7 @@ export class KwilDBSession {
 		return this;
 	}
 
+	//select data return limits
 	limit(limit:number){
 		limit = Math.floor(limit);
 		if(limit > 0){
@@ -52,16 +69,19 @@ export class KwilDBSession {
 		return this;
 	}	
 
+	//data group by
 	groupBy(colName:string) {
 		this.toGroug = `group by ${colName}`;
 		return this;
 	}
 
+	//data order by
 	orderBy(colName:string, order:orderType) {
 		this.toOrder = `order by ${colName} ${order}`;
 		return this;
 	}	
 
+	//id condition
 	id(pk:number | dataObject){
 		if(typeof pk === 'number') {
 			return this.where('id', '=', pk);
@@ -74,6 +94,7 @@ export class KwilDBSession {
 		return this;
 	}
 
+	//where condition
 	where(colName:string, operator:operatorType, value:any){
 		if(this.toWhere === ''){
 			this.toWhere = 'where ';
@@ -84,10 +105,12 @@ export class KwilDBSession {
 		return this.filter(colName, operator, value);
 	}
 
+	//and condition
 	and(colName:string, operator:operatorType, value:any){
 		return this.where(colName, operator, value);
 	}
 
+	//or condition
 	or(colName:string, operator:operatorType, value:any){
 		if(this.toWhere === ''){
 			this.toWhere = 'where ';
@@ -236,6 +259,18 @@ export class KwilDBSession {
     	}
 
     	return res.rowCount;
+	}
+
+	//truncate data
+	async truncate(sync:boolean = true){
+		const sql = `truncate table ${this.tableName}`;
+		const res = this.conn.preparedStatement(sql, [], sync);
+
+		if (typeof res === 'string') {
+      		throw new Error(res);
+    	}
+
+    	return true;		
 	}
 
 	//exist or not
