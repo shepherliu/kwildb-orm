@@ -68,7 +68,7 @@ export class KwilDBEngine {
 	//select a schema
 	use(schema:string){
 		if(schema != ''){
-			this.schema = schema.replaceAll(' ','');
+			this.schema = schema;
 		}else{
 			this.schema = 'public';
 		}
@@ -138,7 +138,7 @@ export class KwilDBEngine {
 
 	//create schema
 	async createSchema(schema:string){
-		const sql = `create schema if not exists ${schema.replaceAll(' ','')}`;
+		const sql = `create schema if not exists ${schema}`;
 		const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
@@ -149,7 +149,7 @@ export class KwilDBEngine {
 
 	//drop schema
 	async dropSchema(schema:string){
-		const sql = `drop schema if exists ${schema.replaceAll(' ','')}`;
+		const sql = `drop schema if exists ${schema}`;
 		const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);
@@ -177,7 +177,7 @@ export class KwilDBEngine {
 
 	//create table
 	async createTable(tableName:string, columns:dataObject){
-		let sql = `create table if not exists ${this.schema}.${tableName.replaceAll(' ','')}`;
+		let sql = `create table if not exists ${this.schema}.${tableName}`;
 
 		const subsql = [];
 
@@ -197,7 +197,7 @@ export class KwilDBEngine {
 
 	//drop table
 	async dropTable(tableName:string){
-	    const sql = `drop table if exists ${this.schema}.${tableName.replaceAll(' ','')}`;
+	    const sql = `drop table if exists ${this.schema}.${tableName}`;
 	    const res = await this.conn.preparedStatement(sql, [], true);
 	    if (typeof res === 'string') {
 	      throw new Error(res);

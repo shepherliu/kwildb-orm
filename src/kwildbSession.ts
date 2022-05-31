@@ -33,7 +33,7 @@ export class KwilDBSession {
 	//select a schema
 	use(schema:string){
 		if(schema != ''){
-			this.schema = schema.replaceAll(' ','');
+			this.schema = schema;
 		}else{
 			this.schema = 'public';
 		}
@@ -44,7 +44,7 @@ export class KwilDBSession {
 	//select a table
 	table(tableName:string){
 		this.clear();
-		this.tableName = `${this.schema}.${tableName.replaceAll(' ','')}`;
+		this.tableName = `${this.schema}.${tableName}`;
 		return this;
 	}
 
