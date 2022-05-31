@@ -119,7 +119,7 @@
 	select(select:string[]); //select columns
 	limit(limit:number); //limit condition
 	groupBy(colName:string); //group by column
-	orderBy(colName:string, order:orderType); //order by asc,desc
+	orderBy(colName:string, order:orderType = 'asc'); //order by asc,desc
 	id(pk:number | dataObject); //id condition, number or (k,v) maps
 	where(colName:string, operator:operatorType, value:any); //where condition
 	and(colName:string, operator:operatorType, value:any); //and condition

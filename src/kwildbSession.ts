@@ -76,7 +76,7 @@ export class KwilDBSession {
 	}
 
 	//data order by
-	orderBy(colName:string, order:orderType) {
+	orderBy(colName:string, order:orderType = 'asc') {
 		this.toOrder = `order by ${colName} ${order}`;
 		return this;
 	}	
