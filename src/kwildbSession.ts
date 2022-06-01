@@ -282,7 +282,13 @@ export class KwilDBSession {
 
 	//exist or not
 	async exist(data:dataObject = {}, sync:boolean = false){
-		const res = await this.limit(1).find(data, sync);
+		if(this.toLimit != ''){
+			this.toLimit = this.toLimit.replace(/limit\s\d{1,}/g,'limit 1');
+		}else{
+			this.toLimit = 'limit 1';
+		}
+
+		const res = await this.find(data, sync);
 		if(res.length === 0){
 			return false;
 		}
@@ -292,7 +298,13 @@ export class KwilDBSession {
 
 	//get one data
 	async get(data:dataObject = {}, sync:boolean = false){
-		const res = await this.limit(1).find(data, sync);
+		if(this.toLimit != ''){
+			this.toLimit = this.toLimit.replace(/limit\s\d{1,}/g,'limit 1');
+		}else{
+			this.toLimit = 'limit 1';
+		}
+
+		const res = await this.find(data, sync);
 		if(res.length === 0){
 			return null;
 		}
@@ -302,7 +314,13 @@ export class KwilDBSession {
 
 	//get first data
 	async first(data:dataObject = {}, sync:boolean = false) {
-		const res = await this.limit(1).find(data, sync);
+		if(this.toLimit != ''){
+			this.toLimit = this.toLimit.replace(/limit\s\d{1,}/g,'limit 1');
+		}else{
+			this.toLimit = 'limit 1';
+		}
+
+		const res = await this.find(data, sync);
 		if(res.length === 0){
 			return null;
 		}

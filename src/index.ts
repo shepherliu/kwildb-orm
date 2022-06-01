@@ -1,7 +1,9 @@
-import { NewEngine, KwilDBEngine} from './kwildbEngine'
-import { KwilDBSession } from './kwildbSession'
+import { NewEngine, createMoat, getMoats, decryptKey } from './kwildbEngine'
+
 import { kwilDBHost, kwilDBProtocol} from './constant'
 
-export { KwilDBEngine, KwilDBSession, kwilDBHost, kwilDBProtocol};
+export { createMoat, getMoats, decryptKey, kwilDBHost, kwilDBProtocol};
+
 export * from './models';
+
 export default NewEngine;

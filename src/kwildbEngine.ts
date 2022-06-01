@@ -16,6 +16,22 @@ export const NewEngine = (host = kwilDBHost, protocol = kwilDBProtocol, moat:str
 	return engine;
 }
 
+//create a new moat
+export const createMoat = async (registry:string = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = '', signature:string = '', address:string = '') => {
+	return await KwilDB.createMoat(registry, moat, signature, address);
+}
+
+//get moats
+export const getMoats = async (registry:string = `${kwilDBProtocol}://${kwilDBHost}`, address:string) => {
+	return await KwilDB.getMoats(registry, address);
+}
+
+//decrypt key
+export const decryptKey = async (signature:string, address:string, cipherText:string) => {
+	return await KwilDB.decryptKey(signature, address, cipherText);
+}
+
+
 export class KwilDBEngine {
 	private host:string;
 	private protocol:string;
@@ -96,18 +112,8 @@ export class KwilDBEngine {
 		return await this.conn.getMoatDebit();
 	}
 
-	//create a new moat
-	async createMoat(registry = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = '', signature:string = '', address:string = ''){
-		return await KwilDB.createMoat(registry, moat, signature, address);
-	}
-
-	//decrypt key
-	async decryptKey(signature:string, address:string, cipherText:string){
-		return await KwilDB.decryptKey(signature, address, cipherText);
-	}
-
 	//get funding pools by moat
-	async getPoolsByMoat(registry = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = ''){
+	async getPoolsByMoat(registry:string = `${kwilDBProtocol}://${kwilDBHost}`, moat:string = this.moat){
 		return await KwilDB.getPoolsByMoat(registry, moat);
 	}
 
@@ -117,7 +123,7 @@ export class KwilDBEngine {
 	}
 
 	//create funding pool
-	async createFundingPool(name:string, addr:string, validator:string, chain:string = 'polygon', token:string = 'KRED', moat:string){
+	async createFundingPool(name:string, addr:string, validator:string, chain:string = 'polygon', token:string = 'KRED', moat:string = this.moat){
 		return await KwilDB.pools.createFundingPool(name, addr, validator, chain, token, moat);
 	}
 
