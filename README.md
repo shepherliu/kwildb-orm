@@ -117,7 +117,7 @@
         
 	table(tableName:string); //select table name
 	select(select:string[] = []); //select columns
-	limit(limit:number); //limit condition
+	limit(limit:number, offset:number = 0); //limit condition
 	groupBy(colName:string); //group by column
 	orderBy(colName:string, order:orderType = 'asc'); //order by asc,desc
 	id(pk:number | dataObject); //id condition, number or (k,v) maps

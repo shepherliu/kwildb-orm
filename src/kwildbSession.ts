@@ -59,13 +59,20 @@ export class KwilDBSession {
 	}
 
 	//select data return limits
-	limit(limit:number){
+	limit(limit:number, offset:number = 0){
 		limit = Math.floor(limit);
+		offset = Math.floor(offset);
+
 		if(limit > 0){
-			this.toLimit = `limit ${limit}`;
+			if(offset > 0){
+				this.toLimit = `limit ${limit} offset ${offset}`;
+			}else{
+				this.toLimit = `limit ${limit}`;
+			}
 		}else{
 			this.toLimit = '';
 		}
+		
 		return this;
 	}	
 
