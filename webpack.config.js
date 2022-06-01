@@ -14,6 +14,7 @@ const config = {
   devServer: {
     open: true,
     host: "localhost",
+    https: true,
   },
   plugins: [
     new webpack.ProvidePlugin({

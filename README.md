@@ -33,6 +33,70 @@
     }
 ``` 
 
+   create moat with web3 wallet
+
+```typescript
+
+      import { providers } from 'ethers'
+      
+      import { NewEngine } from './kwildbEngine'
+
+      import { createMoat, getMoats,  decryptKey} from './kwildbEngine'
+
+      const host = 'test-db.kwil.xyz';
+      const protocol = 'https';
+      const moat = 'test_cloud';
+      const signingPhrase = 'signing phrase';
+
+      let privateKey = '';
+      let secret = '';
+
+      //get a web3 provider
+      const provider = new providers.Web3Provider((window as any).ethereum);
+
+      //get a signer
+      const signer = provider.getSigner();
+
+      //get wallet address
+      const address = (window as any).ethereum.selectedAddress;
+
+      //get a signature with your signing phrase
+      const signature = await signer.signMessage(signingPhrase);
+
+      //create a new moat
+      console.log(await createMoat(
+         `${protocol}://${host}`,
+         moat,
+         signature,
+         address,
+      ));
+
+      //get all moats by address
+      const moats = await getMoats(`${protocol}://${host}`, address);
+
+      //decrypt privateKey and secret by signature
+      for(const i in moats){
+         if(moats[i].moat === moat){
+            privateKey = await decryptKey(signature, address, moats[i].api_key);
+            secret = await decryptKey(signature, address, moats[i].secret);
+            break;
+         }
+      }
+
+      //create a new engine
+      const engine = NewEngine(host, protocol, moat, privateKey, secret);
+       
+      if(engine != null){
+         //get fundding
+         console.log(await engine.getMoatFunding());
+         //get debit
+         console.log(await engine.getMoatDebit());
+         //use a schema, default using 'public' schema
+         engine.use('my_schema');       
+      }
+
+``` 
+
    supported functions:
 
 ```typescript
